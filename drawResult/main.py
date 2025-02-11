@@ -9,11 +9,12 @@ comparedResult = []
 def drawImage(comparedResult: List[Dict[str, Any]]) -> None:
     """
     1. comparedResult是一個json array
-    2. 繪製比較圖，繪製方式如同股票走勢圖
-    3. 以一根一根的線段繪製，使用提供的close、open、high、low、open數值
+    2. 根據comparedResult中的stockA、stockB的open、close、high、low數值繪製圖表
+    3. stockA、StockB的顏色分開，A是藍色，B是橘色
+    4. open、close、high、low繪製，參考股票的線段繪製方式，不管顏色，只管型態
+    5. stockB繪製再ID+0.5的位置
     """
     # 檢查comparedResult是否為空
-    print(comparedResult)
     if not comparedResult:
         print("comparedResult is empty.")
         return
@@ -42,8 +43,9 @@ def drawImage(comparedResult: List[Dict[str, Any]]) -> None:
 
             # 繪製線段
             ax.plot([i, i], [low, high], color="black", linewidth=1)  # 垂直線
-            ax.plot([i, i], [open_val, close],
-                    color=line_color, linewidth=2)  # 開收盤線
+            ax.plot([i + (0.5 if color == "orange" else 0), i + (0.5 if color ==
+                    # 開收盤線
+                                                                 "orange" else 0)], [open_val, close], color=line_color, linewidth=2)
 
     # 設定圖表標題和軸標籤
     ax.set_title("Compared Result")
