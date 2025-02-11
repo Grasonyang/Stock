@@ -10,7 +10,6 @@ def drawImage(comparedResult: List[Dict[str, Any]]) -> None:
     """
     1. comparedResult是一個json array
     2. 根據comparedResult中的stockA、stockB的open、close、high、low數值繪製圖表
-    3. stockA、StockB的顏色分開，A是藍色，B是橘色
     4. open、close、high、low繪製，參考股票的線段繪製方式，不管顏色，只管型態
     5. stockB繪製再ID+0.5的位置
     """
@@ -32,20 +31,19 @@ def drawImage(comparedResult: List[Dict[str, Any]]) -> None:
         stockA = item["stockA"]
         stockB = item["stockB"]
 
-        for stock, color in zip([stockA, stockB], ["blue", "orange"]):
+        for stock, offset, color in zip([stockA, stockB], [0, 0.5], ["red", "green"]):
             close = stock["close"]
             open_val = stock["open"]
             high = stock["high"]
             low = stock["low"]
 
             # 根據close和open的關係決定顏色
-            line_color = "green" if close > open_val else "red"
+            line_color = color if close > open_val else color  # stockA的顏色
+            alpha = 0.3 if stock == stockA else 1  # stockA的透明度
 
             # 繪製線段
-            ax.plot([i, i], [low, high], color="black", linewidth=1)  # 垂直線
-            ax.plot([i + (0.5 if color == "orange" else 0), i + (0.5 if color ==
-                    # 開收盤線
-                                                                 "orange" else 0)], [open_val, close], color=line_color, linewidth=2)
+            ax.plot([i + offset, i + offset], [low, high], color="black", linewidth=1)  # 垂直線
+            ax.plot([i + offset, i + offset], [open_val, close], color=line_color, linewidth=2, alpha=alpha)  # 開收盤線
 
     # 設定圖表標題和軸標籤
     ax.set_title("Compared Result")
